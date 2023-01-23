@@ -1,23 +1,24 @@
 import { useState, useEffect } from 'react'
 
 const Dashboard = (): JSX.Element => {
-  const [teams] = useState([])
+  const [teams, setTeams] = useState([])
 
   useEffect(() => {
-    fetch('http:localhost:3000/teams')
-      .then(data => {
-        const x = data.body?.getReader().read()
-        console.log(x)
-      })
-      // .then(res => { setTeams(res) })
-      .catch(e => { console.log(e) })
+    const getData = async (): Promise<void> => {
+      const url = 'https://statsapi.web.nhl.com/api/v1/teams'
+      const x = await fetch(url)
+      const y = await x.json()
+      console.log(y.teams)
+      setTeams(y.teams)
+    }
+    getData()
   }, [])
 
   return (
     <div>
       <h4>Dash</h4>
       {
-        teams?.map(team => { console.log(team); return <p key={team}>{ team }</p> })
+        teams?.map(team => <p key={team}>{ team.name }</p>)
       }
     </div>
   )
